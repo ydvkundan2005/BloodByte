@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BloodByte - Emergency Network</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div id="loader">
+    <div class="spinner"></div>
+    <p id="loader-text" style="color:#aaa; margin-top:10px;">Loading...</p>
+</div>
+
+<div id="msg-modal">
+    <div class="msg-card" id="msg-card-inner">
+        <i id="msg-icon" class="fa-solid fa-circle-exclamation msg-icon"></i>
+        <h3 id="msg-title" style="margin-bottom:15px;">Alert</h3>
+        <p id="msg-txt" style="color:#ccc; margin-bottom:25px;">Message goes here.</p>
+        <button class="btn-primary" onclick="document.getElementById('msg-modal').style.display='none'" style="padding:12px;">Okay</button>
+    </div>
+</div>
+
+
+<div id="notif-modal">
+    <i class="fa-solid fa-bell" style="font-size:50px; color:var(--primary); margin-bottom:20px;"></i>
+    <h2>Enable Notifications</h2>
+    <p style="color:#aaa; margin-bottom:30px;">Alert me about nearby blood requests and messages.</p>
+    <button class="btn-primary" onclick="enableNotif()">Allow Notifications</button>
+    <p style="margin-top:20px; color:#555; cursor:pointer;" onclick="document.getElementById('notif-modal').style.display='none'">Skip</p>
+</div>
+
+<div id="landing-view" class="view" style="display:flex;">
+    <h1 class="brand-title">BloodByte</h1>
+    <p style="color:#888; margin-bottom:40px; font-size:18px; line-height:1.6;">
+        Emergency blood network. Connect with nearby donors instantly.
+    </p>
+    <button class="btn-primary" onclick="nav('landing-view','login-view')">
+        Get Started <i class="fa-solid fa-arrow-right"></i>
+    </button>
+</div>
+
+<div id="login-view" class="view">
+    <div class="login-split">
+        <div class="login-left">
+            <div class="login-brand">Blood<br>Byte.</div>
+            <div class="login-sub">Emergency Donor Network</div>
+        </div>
+        <div class="login-right">
+            <h2 style="margin-bottom:30px; font-weight:800; font-size:28px;">LOGIN</h2>
+            <input type="email" id="log-email" placeholder="Gmail">
+            <input type="password" id="log-pass" placeholder="Password">
+            <button class="btn-primary" style="margin-top:10px;" onclick="doLogin()">Login</button>
+            <p onclick="resetPass()" style="margin-top:15px; font-size:13px; cursor:pointer; opacity:0.8; text-align: center;">Forgot Password?</p>
+            <button class="create-btn" onclick="nav('login-view','register-view')">Create Account</button>
+        </div>
+    </div>
+</div>
+
+<div id="register-view" class="view">
+    <h2 style="color:var(--primary); margin-bottom:30px;">Create Account</h2>
+    <input type="text" id="reg-name" placeholder="Full Name">
+    <input type="email" id="reg-email" placeholder="Gmail">
+    <input type="password" id="reg-pass" placeholder="Password (Min 6 chars)">
+    <select id="reg-blood">
+        <option value="" disabled selected>Blood Group</option>
+        <option value="A+">A+</option><option value="A-">A-</option>
+        <option value="B+">B+</option><option value="B-">B-</option>
+        <option value="O+">O+</option><option value="O-">O-</option>
+        <option value="AB+">AB+</option><option value="AB-">AB-</option>
+    </select>
+    <label style="color:#888; font-size:12px; margin-left:5px;">Date of Birth</label>
+    <input type="date" id="reg-dob">
+    <button class="btn-primary" onclick="doRegister()">Create Account</button>
+    <p onclick="nav('register-view','login-view')" style="text-align:center; margin-top:20px; color:#888; cursor:pointer;">Back to Login</p>
+</div>
+
+<div id="dashboard-view" class="view">
+    <div class="header">
+        <div>
+            <div style="font-size:12px; color:#888;">WELCOME</div>
+            <h1 id="dash-name">User</h1>
+            <div id="dash-info" style="font-size:13px; color:var(--primary);">...</div>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <div class="icon-circle" id="loc-indicator" onclick="forceLocationUpdate()"><i class="fa-solid fa-location-crosshairs"></i></div>
+            <div class="icon-circle" onclick="doLogout()"><i class="fa-solid fa-power-off" style="color:#ff4444;"></i></div>
+        </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
+        <div class="glass-card" onclick="showInfo('Safety')" style="text-align:center; cursor:pointer;">
+            <i class="fa-solid fa-shield-virus" style="font-size:24px; color:var(--primary); margin-bottom:10px;"></i>
+            <div style="font-weight:600;">Safety</div>
+        </div>
+        <div class="glass-card" onclick="showInfo('Benefits')" style="text-align:center; cursor:pointer;">
+            <i class="fa-solid fa-heart-pulse" style="font-size:24px; color:var(--primary); margin-bottom:10px;"></i>
+            <div style="font-weight:600;">Benefits</div>
+        </div>
+    </div>
+
+    <div class="glass-card" style="text-align:center; margin-bottom:30px;">
+        <p id="quote" style="font-family:'Playfair Display',serif; font-style:italic;">"Donate blood, save life."</p>
+    </div>
+
+    <div id="my-req-container" style="display:none;">
+        <div class="section-head" style="color:var(--primary);">My Active Requests</div>
+        <div id="my-req-list"></div>
+    </div>
+
+    <div class="section-head">Nearby Requests (20km)</div>
+    <div id="feed-list">
+        <p style="text-align:center; color:#555; margin-top:20px;">Scanning location...</p>
+    </div>
+</div>
+
+<div class="dock" id="main-dock">
+    <div class="dock-item" onclick="openPanel('panel-notif')">
+        <i class="fa-solid fa-bell"></i>
+        <div id="dot-notif" class="red-dot"></div>
+    </div>
+    <div class="dock-main" onclick="openPanel('panel-req')"><i class="fa-solid fa-plus"></i> Request</div>
+    <div class="dock-item" onclick="openPanel('panel-chats')">
+        <i class="fa-regular fa-comments"></i>
+        <div id="dot-chat" class="red-dot"></div>
+    </div>
+</div>
+
+<div id="panel-req" class="panel">
+    <div class="panel-head"><i class="fa-solid fa-arrow-left" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title">Request Blood</span></div>
+    <input type="text" id="req-pat" placeholder="Patient Name">
+    <select id="req-bg"><option>A+</option><option>B+</option><option>O+</option><option>AB+</option><option>A-</option><option>B-</option><option>O-</option><option>AB-</option></select>
+    <input type="text" id="req-hosp" placeholder="Hospital Name">
+    
+    <button id="btn-req-loc" onclick="getReqLoc()" style="width:100%; padding:15px; background:#222; border:1px dashed #555; border-radius:12px; color:var(--primary); margin-bottom:15px; cursor:pointer; display: flex; align-items: center; justify-content: center;">
+        <div class="btn-spinner"></div>
+        <span><i class="fa-solid fa-location-dot"></i> Set Current Location</span>
+    </button>
+
+    <input type="text" id="req-coord" placeholder="Lat, Lng" readonly style="font-size:12px; color:#888;">
+    <input type="number" id="req-phone" placeholder="Contact">
+    <textarea id="req-ben" rows="3" placeholder="Donor Benefits..."></textarea>
+    <button class="btn-primary" onclick="submitReq()">Broadcast Request</button>
+</div>
+
+<div id="panel-notif" class="panel">
+    <div class="panel-head"><i class="fa-solid fa-arrow-left" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title">Notifications</span></div>
+    <div id="notif-list"></div>
+</div>
+
+<div id="panel-chats" class="panel">
+    <div class="panel-head"><i class="fa-solid fa-arrow-left" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title">Messages</span></div>
+    <div id="chat-list"></div>
+</div>
+
+<div id="panel-detail" class="panel">
+    <div class="panel-head"><i class="fa-solid fa-arrow-left" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title">Details</span></div>
+    <div class="glass-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h1 style="color:var(--primary); font-size:40px;" id="det-bg">A+</h1>
+            <span style="background:#333; padding:5px 10px; border-radius:8px;" id="det-dist">-- km</span>
+        </div>
+        <h2 id="det-pat" style="margin:10px 0;">Name</h2>
+        <p id="det-hosp" style="color:#aaa; margin-bottom:20px;">Hospital</p>
+        <p style="color:#888; font-size:12px;">CONTACT</p>
+        <p id="det-con" style="font-size:18px; font-weight:700; margin-bottom:20px;">--</p>
+        <p style="color:#888; font-size:12px;">BENEFITS</p>
+        <p id="det-ben" style="font-size:14px; margin-bottom:20px;">--</p>
+        <button id="btn-acc" class="btn-primary" style="background:var(--success); margin-bottom:10px;" onclick="doAccept()">I Accept</button>
+        <button class="btn-primary" style="background:#333;" onclick="openChat()">Message</button>
+    </div>
+</div>
+
+<div id="panel-room" class="panel">
+    <div class="panel-head" style="border-bottom:1px solid #333; padding-bottom:15px;">
+        <i class="fa-solid fa-arrow-left" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title" id="chat-name">User</span>
+    </div>
+    <div class="chat-box">
+        <div id="msgs-box" class="msgs"></div>
+        <div style="display:flex; gap:10px; padding-top:10px;">
+            <input type="text" id="msg-in" placeholder="Type..." style="margin:0;">
+            <button class="btn-primary" style="width:60px; border-radius:12px;" onclick="sendMsg()"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<div id="panel-info" class="panel">
+    <div class="panel-head"><i class="fa-solid fa-xmark" onclick="history.back()" style="cursor:pointer; font-size:24px;"></i><span class="panel-title" id="info-ti">Info</span></div>
+    <ul id="info-co" style="padding-left:20px; color:#ddd; line-height:1.8;"></ul>
+</div>
+</body>
+</html>
