@@ -493,4 +493,4 @@ window.showInfo = (t) => {
 const q = ["Heroes come in all sizes.", "Tears can't save life, Blood can.", "Be a savior today."];
 setInterval(() => document.getElementById('quote').innerText = q[Math.floor(Math.random()*q.length)], 60000);
 
-</script>
+

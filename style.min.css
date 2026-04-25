@@ -1,4 +1,4 @@
-<style>
+
 /* =========================================
    CORE STYLES
    ========================================= */
@@ -204,5 +204,3 @@ input:focus { border-color: var(--primary); }
     .login-split { flex-direction: row; }
     .login-left, .login-right { flex: 1; }
 }
-
-</style>
