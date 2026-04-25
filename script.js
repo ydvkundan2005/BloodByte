@@ -1,20 +1,17 @@
-</script>
-
-<script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, doc, setDoc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+    apiKey: "AIzaSyB0d0vC7VutjxrvVNk0Zu39vtSj5_TSDYk",
+    authDomain: "bloodbyte-3011.firebaseapp.com",
+    databaseURL: "https://bloodbyte-3011-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "bloodbyte-3011",
+    storageBucket: "bloodbyte-3011.firebaseapp.com",
+    messagingSenderId: "369161777896",
+    appId: "1:369161777896:web:1858c97aa47e1a28a68f5d",
+    measurementId: "G-B8DHFG6XB4"
 };
 
 const app = initializeApp(firebaseConfig);
